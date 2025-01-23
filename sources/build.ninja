@@ -1,0 +1,931 @@
+# buildVariable: Build a variable font from a source file
+rule buildVariable
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner fontmake --output-path $out -o variable $
+      $fontmake_type $in $args $stamp
+  description = buildVariable
+
+# fix: Run gftools-fix
+rule fix
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner gftools-fix-font -o $out $args $in $stamp
+  description = fix
+
+# compress: Compress to webfont
+rule compress
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner fonttools ttLib.woff2 compress -o $out $in $
+      $stamp
+  description = compress
+
+# remapLayout: Run gftools-remap-layout to change a font's layout rules
+rule remapLayout
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner gftools-remap-layout -o $out $in $args $stamp
+  description = remapLayout
+
+# rename: Rename a font
+rule rename
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner gftools-rename-font -o $out $args $in $
+      "$name" $stamp
+  description = rename
+
+# buildStat: Build a STAT table from one or more source files
+rule buildSTAT-operation
+  command = gftools-gen-stat --out $tempdir $args -- $in && mv $finalfile $
+      $out $stamp
+rule buildSTAT-postprocess
+  command = gftools-gen-stat --inplace $args -- $in $stamp
+
+# instantiateUfo: Create instance UFOs from a Glyphs or designspace file
+rule instantiateUfo
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner fontmake -i "$instance_name" -o ufo $
+      $fontmake_type $in $args $stamp
+  description = instantiateUfo
+
+# buildTTF: Build a TTF from a source file
+rule buildTTF
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner fontmake --output-path $out -o ttf $
+      $fontmake_type $in $args $stamp
+  description = buildTTF
+
+# autohint: Run gftools-autohint
+rule autohint
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner gftools-autohint $args -o $out $in $stamp
+  description = autohint
+
+# buildOTF: Build a OTF from a source file
+rule buildOTF
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner fontmake --output-path $out -o otf $
+      $fontmake_type $in $args $stamp
+  description = buildOTF
+
+# copy: Copy a file
+rule copy
+  command = /Users/marichalemma/Google/env/bin/python3.12 -m $
+      gftools.builder.jobrunner cp $in $out $stamp
+  description = copy
+
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpim51hfae
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpim51hfae: $
+    buildVariable CommonSerif.designspace
+  operation = buildVariable
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+# Generating instance_ufos/CommonSerif-Regular.ufo.json
+build instance_ufos/CommonSerif-Regular.ufo.json: instantiateUfo $
+    CommonSerif.designspace
+  operation = instantiateUfo
+  instance_name = Regular
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating instance_ufos/CommonSerif-News.ufo.json
+build instance_ufos/CommonSerif-News.ufo.json: instantiateUfo $
+    CommonSerif.designspace
+  operation = instantiateUfo
+  instance_name = News
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating instance_ufos/CommonSerif-Medium.ufo.json
+build instance_ufos/CommonSerif-Medium.ufo.json: instantiateUfo $
+    CommonSerif.designspace
+  operation = instantiateUfo
+  instance_name = Medium
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating instance_ufos/CommonSerif-SemiBold.ufo.json
+build instance_ufos/CommonSerif-SemiBold.ufo.json: instantiateUfo $
+    CommonSerif.designspace
+  operation = instantiateUfo
+  instance_name = SemiBold
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating instance_ufos/CommonSerif-Bold.ufo.json
+build instance_ufos/CommonSerif-Bold.ufo.json: instantiateUfo $
+    CommonSerif.designspace
+  operation = instantiateUfo
+  instance_name = Bold
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating ../fonts/webfonts/CommonSerif[wght].woff2
+build ../fonts/webfonts/CommonSerif[wght].woff2: compress $
+    ../fonts/variable/CommonSerif[wght].ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpxplqepg7
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpxplqepg7: $
+    remapLayout ../fonts/variable/CommonSerif[wght].ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_ldeh8qo
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_ldeh8qo: $
+    buildVariable CommonSerif-Italic.designspace
+  operation = buildVariable
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+# Generating instance_ufos/CommonSerif-Italic.ufo.json
+build instance_ufos/CommonSerif-Italic.ufo.json: instantiateUfo $
+    CommonSerif-Italic.designspace
+  operation = instantiateUfo
+  instance_name = Italic
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating instance_ufos/CommonSerif-NewsItalic.ufo.json
+build instance_ufos/CommonSerif-NewsItalic.ufo.json: instantiateUfo $
+    CommonSerif-Italic.designspace
+  operation = instantiateUfo
+  instance_name = NewsItalic
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating instance_ufos/CommonSerif-MediumItalic.ufo.json
+build instance_ufos/CommonSerif-MediumItalic.ufo.json: instantiateUfo $
+    CommonSerif-Italic.designspace
+  operation = instantiateUfo
+  instance_name = MediumItalic
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating instance_ufos/CommonSerif-SemiBoldItalic.ufo.json
+build instance_ufos/CommonSerif-SemiBoldItalic.ufo.json: instantiateUfo $
+    CommonSerif-Italic.designspace
+  operation = instantiateUfo
+  instance_name = SemiBoldItalic
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating instance_ufos/CommonSerif-BoldItalic.ufo.json
+build instance_ufos/CommonSerif-BoldItalic.ufo.json: instantiateUfo $
+    CommonSerif-Italic.designspace
+  operation = instantiateUfo
+  instance_name = BoldItalic
+  fontmake_type = -m
+  fontmake_args =  --verbose WARNING 
+  args =  --ufo-structure=json --output-dir instance_ufos
+# Generating ../fonts/webfonts/CommonSerif-Italic[wght].woff2
+build ../fonts/webfonts/CommonSerif-Italic[wght].woff2: compress $
+    ../fonts/variable/CommonSerif-Italic[wght].ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpul_2qg76
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpul_2qg76: $
+    remapLayout ../fonts/variable/CommonSerif-Italic[wght].ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-Regular.woff2
+build ../fonts/webfonts/CommonSerif-Regular.woff2: compress $
+    ../fonts/ttf/CommonSerif-Regular.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp16wzubp6
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp16wzubp6: $
+    remapLayout ../fonts/ttf/CommonSerif-Regular.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp87c2dg2f
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp87c2dg2f: $
+    remapLayout ../fonts/otf/CommonSerif-Regular.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-News.woff2
+build ../fonts/webfonts/CommonSerif-News.woff2: compress $
+    ../fonts/ttf/CommonSerif-News.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpdschxuln
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpdschxuln: $
+    remapLayout ../fonts/ttf/CommonSerif-News.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkglt51qp
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkglt51qp: $
+    remapLayout ../fonts/otf/CommonSerif-News.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-Medium.woff2
+build ../fonts/webfonts/CommonSerif-Medium.woff2: compress $
+    ../fonts/ttf/CommonSerif-Medium.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpbqid9ifp
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpbqid9ifp: $
+    remapLayout ../fonts/ttf/CommonSerif-Medium.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpjjyaglvj
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpjjyaglvj: $
+    remapLayout ../fonts/otf/CommonSerif-Medium.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-SemiBold.woff2
+build ../fonts/webfonts/CommonSerif-SemiBold.woff2: compress $
+    ../fonts/ttf/CommonSerif-SemiBold.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpvkah1j_d
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpvkah1j_d: $
+    remapLayout ../fonts/ttf/CommonSerif-SemiBold.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmplzfeag31
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmplzfeag31: $
+    remapLayout ../fonts/otf/CommonSerif-SemiBold.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-Bold.woff2
+build ../fonts/webfonts/CommonSerif-Bold.woff2: compress $
+    ../fonts/ttf/CommonSerif-Bold.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpeoyncu4m
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpeoyncu4m: $
+    remapLayout ../fonts/ttf/CommonSerif-Bold.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpuevqxuqz
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpuevqxuqz: $
+    remapLayout ../fonts/otf/CommonSerif-Bold.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-Italic.woff2
+build ../fonts/webfonts/CommonSerif-Italic.woff2: compress $
+    ../fonts/ttf/CommonSerif-Italic.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp003cpexl
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp003cpexl: $
+    remapLayout ../fonts/ttf/CommonSerif-Italic.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp507qj3sd
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp507qj3sd: $
+    remapLayout ../fonts/otf/CommonSerif-Italic.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-NewsItalic.woff2
+build ../fonts/webfonts/CommonSerif-NewsItalic.woff2: compress $
+    ../fonts/ttf/CommonSerif-NewsItalic.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpsmg_y3j7
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpsmg_y3j7: $
+    remapLayout ../fonts/ttf/CommonSerif-NewsItalic.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy61dljp9
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy61dljp9: $
+    remapLayout ../fonts/otf/CommonSerif-NewsItalic.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-MediumItalic.woff2
+build ../fonts/webfonts/CommonSerif-MediumItalic.woff2: compress $
+    ../fonts/ttf/CommonSerif-MediumItalic.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3170ifdu
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3170ifdu: $
+    remapLayout ../fonts/ttf/CommonSerif-MediumItalic.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9zuajxfm
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9zuajxfm: $
+    remapLayout ../fonts/otf/CommonSerif-MediumItalic.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-SemiBoldItalic.woff2
+build ../fonts/webfonts/CommonSerif-SemiBoldItalic.woff2: compress $
+    ../fonts/ttf/CommonSerif-SemiBoldItalic.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmphhp3ga0x
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmphhp3ga0x: $
+    remapLayout ../fonts/ttf/CommonSerif-SemiBoldItalic.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkbahrwzz
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkbahrwzz: $
+    remapLayout ../fonts/otf/CommonSerif-SemiBoldItalic.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating ../fonts/webfonts/CommonSerif-BoldItalic.woff2
+build ../fonts/webfonts/CommonSerif-BoldItalic.woff2: compress $
+    ../fonts/ttf/CommonSerif-BoldItalic.ttf
+  operation = compress
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp08iylkj6
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp08iylkj6: $
+    remapLayout ../fonts/ttf/CommonSerif-BoldItalic.ttf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpuhgcxoyt
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpuhgcxoyt: $
+    remapLayout ../fonts/otf/CommonSerif-BoldItalic.otf
+  operation = remapLayout
+  args = 'smcp -> ccmp'
+# Postprocessing  with BuildSTAT
+build $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpthwd4hpm.buildStatstamp: $
+    buildSTAT-postprocess ../fonts/variable/CommonSerifSC-Italic[wght].ttf $
+    ../fonts/variable/CommonSerif[wght].ttf $
+    ../fonts/variable/CommonSerif-Italic[wght].ttf $
+    ../fonts/variable/CommonSerifSC[wght].ttf
+  stamp =  && touch $
+      /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpthwd4hpm.buildStatstamp
+  postprocess = buildStat
+# Generating ../fonts/variable/CommonSerif[wght].ttf
+build ../fonts/variable/CommonSerif[wght].ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpim51hfae
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9fn33k73
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9fn33k73: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpxplqepg7
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/variable/CommonSerifSC[wght].ttf
+build ../fonts/variable/CommonSerifSC[wght].ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9fn33k73
+  operation = fix
+  args = 
+# Generating ../fonts/variable/CommonSerif-Italic[wght].ttf
+build ../fonts/variable/CommonSerif-Italic[wght].ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_ldeh8qo
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpr7o_mpm7
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpr7o_mpm7: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpul_2qg76
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/variable/CommonSerifSC-Italic[wght].ttf
+build ../fonts/variable/CommonSerifSC-Italic[wght].ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpr7o_mpm7
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpbqtecfif
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpbqtecfif: $
+    buildTTF instance_ufos/CommonSerif-Regular.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp1l48gyh4
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp1l48gyh4: $
+    buildOTF instance_ufos/CommonSerif-Regular.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpcrmkldid
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpcrmkldid: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpbqtecfif
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-Regular.ttf
+build ../fonts/ttf/CommonSerif-Regular.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpcrmkldid
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpdp4i26bt
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpdp4i26bt: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp16wzubp6
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-Regular.ttf
+build ../fonts/ttf/CommonSerifSC-Regular.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpdp4i26bt
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-Regular.otf
+build ../fonts/otf/CommonSerif-Regular.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp1l48gyh4
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpm13qi8r8
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpm13qi8r8: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp87c2dg2f
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-Regular.otf
+build ../fonts/otf/CommonSerifSC-Regular.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpm13qi8r8
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpam12zb8f
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpam12zb8f: $
+    buildTTF instance_ufos/CommonSerif-News.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9u0uxquq
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9u0uxquq: $
+    buildOTF instance_ufos/CommonSerif-News.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_o6vgjgs
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_o6vgjgs: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpam12zb8f
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-News.ttf
+build ../fonts/ttf/CommonSerif-News.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_o6vgjgs
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpo94hja09
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpo94hja09: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpdschxuln
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-News.ttf
+build ../fonts/ttf/CommonSerifSC-News.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpo94hja09
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-News.otf
+build ../fonts/otf/CommonSerif-News.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9u0uxquq
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpfng3jcvf
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpfng3jcvf: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkglt51qp
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-News.otf
+build ../fonts/otf/CommonSerifSC-News.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpfng3jcvf
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp7fuu6v5t
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp7fuu6v5t: $
+    buildTTF instance_ufos/CommonSerif-Medium.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpccp77i0p
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpccp77i0p: $
+    buildOTF instance_ufos/CommonSerif-Medium.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpmqb_703n
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpmqb_703n: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp7fuu6v5t
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-Medium.ttf
+build ../fonts/ttf/CommonSerif-Medium.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpmqb_703n
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmptw3cwxy2
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmptw3cwxy2: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpbqid9ifp
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-Medium.ttf
+build ../fonts/ttf/CommonSerifSC-Medium.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmptw3cwxy2
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-Medium.otf
+build ../fonts/otf/CommonSerif-Medium.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpccp77i0p
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpvfgpyfjz
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpvfgpyfjz: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpjjyaglvj
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-Medium.otf
+build ../fonts/otf/CommonSerifSC-Medium.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpvfgpyfjz
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmph3dsi37m
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmph3dsi37m: $
+    buildTTF instance_ufos/CommonSerif-SemiBold.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpg6kak4sy
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpg6kak4sy: $
+    buildOTF instance_ufos/CommonSerif-SemiBold.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp33f3echa
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp33f3echa: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmph3dsi37m
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-SemiBold.ttf
+build ../fonts/ttf/CommonSerif-SemiBold.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp33f3echa
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy3jj09u9
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy3jj09u9: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpvkah1j_d
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-SemiBold.ttf
+build ../fonts/ttf/CommonSerifSC-SemiBold.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy3jj09u9
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-SemiBold.otf
+build ../fonts/otf/CommonSerif-SemiBold.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpg6kak4sy
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_6rp_hnp
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_6rp_hnp: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmplzfeag31
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-SemiBold.otf
+build ../fonts/otf/CommonSerifSC-SemiBold.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_6rp_hnp
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp70r3wu2i
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp70r3wu2i: $
+    buildTTF instance_ufos/CommonSerif-Bold.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy3hpcbzm
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy3hpcbzm: $
+    buildOTF instance_ufos/CommonSerif-Bold.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpnmd6dssp
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpnmd6dssp: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp70r3wu2i
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-Bold.ttf
+build ../fonts/ttf/CommonSerif-Bold.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpnmd6dssp
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp4mcylmv7
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp4mcylmv7: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpeoyncu4m
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-Bold.ttf
+build ../fonts/ttf/CommonSerifSC-Bold.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp4mcylmv7
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-Bold.otf
+build ../fonts/otf/CommonSerif-Bold.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy3hpcbzm
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_bxvnz7o
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_bxvnz7o: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpuevqxuqz
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-Bold.otf
+build ../fonts/otf/CommonSerifSC-Bold.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp_bxvnz7o
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpj474h674
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpj474h674: $
+    buildTTF instance_ufos/CommonSerif-Italic.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpczouqw97
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpczouqw97: $
+    buildOTF instance_ufos/CommonSerif-Italic.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpv0mhp4di
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpv0mhp4di: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpj474h674
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-Italic.ttf
+build ../fonts/ttf/CommonSerif-Italic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpv0mhp4di
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpwxmrrkm8
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpwxmrrkm8: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp003cpexl
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-Italic.ttf
+build ../fonts/ttf/CommonSerifSC-Italic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpwxmrrkm8
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-Italic.otf
+build ../fonts/otf/CommonSerif-Italic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpczouqw97
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3goiyc_h
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3goiyc_h: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp507qj3sd
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-Italic.otf
+build ../fonts/otf/CommonSerifSC-Italic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3goiyc_h
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpgn1mjzx7
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpgn1mjzx7: $
+    buildTTF instance_ufos/CommonSerif-NewsItalic.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp44zor1fw
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp44zor1fw: $
+    buildOTF instance_ufos/CommonSerif-NewsItalic.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp0voa9jkq
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp0voa9jkq: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpgn1mjzx7
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-NewsItalic.ttf
+build ../fonts/ttf/CommonSerif-NewsItalic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp0voa9jkq
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpx3l2yw6p
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpx3l2yw6p: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpsmg_y3j7
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-NewsItalic.ttf
+build ../fonts/ttf/CommonSerifSC-NewsItalic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpx3l2yw6p
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-NewsItalic.otf
+build ../fonts/otf/CommonSerif-NewsItalic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp44zor1fw
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmplkdf4s_r
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmplkdf4s_r: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpy61dljp9
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-NewsItalic.otf
+build ../fonts/otf/CommonSerifSC-NewsItalic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmplkdf4s_r
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpwy2e8nly
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpwy2e8nly: $
+    buildTTF instance_ufos/CommonSerif-MediumItalic.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3g9v8k44
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3g9v8k44: $
+    buildOTF instance_ufos/CommonSerif-MediumItalic.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkyfubmd0
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkyfubmd0: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpwy2e8nly
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-MediumItalic.ttf
+build ../fonts/ttf/CommonSerif-MediumItalic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkyfubmd0
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkdmzep57
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkdmzep57: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3170ifdu
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-MediumItalic.ttf
+build ../fonts/ttf/CommonSerifSC-MediumItalic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkdmzep57
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-MediumItalic.otf
+build ../fonts/otf/CommonSerif-MediumItalic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp3g9v8k44
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9p7nmd5b
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9p7nmd5b: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9zuajxfm
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-MediumItalic.otf
+build ../fonts/otf/CommonSerifSC-MediumItalic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp9p7nmd5b
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpg54x59k3
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpg54x59k3: $
+    buildTTF instance_ufos/CommonSerif-SemiBoldItalic.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpsx5v_qmz
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpsx5v_qmz: $
+    buildOTF instance_ufos/CommonSerif-SemiBoldItalic.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp97yc16b9
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp97yc16b9: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpg54x59k3
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-SemiBoldItalic.ttf
+build ../fonts/ttf/CommonSerif-SemiBoldItalic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp97yc16b9
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpb5nkf8xc
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpb5nkf8xc: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmphhp3ga0x
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-SemiBoldItalic.ttf
+build ../fonts/ttf/CommonSerifSC-SemiBoldItalic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpb5nkf8xc
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-SemiBoldItalic.otf
+build ../fonts/otf/CommonSerif-SemiBoldItalic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpsx5v_qmz
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpcl5qripf
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpcl5qripf: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpkbahrwzz
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-SemiBoldItalic.otf
+build ../fonts/otf/CommonSerifSC-SemiBoldItalic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpcl5qripf
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp951h_dpb
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp951h_dpb: $
+    buildTTF instance_ufos/CommonSerif-BoldItalic.ufo.json
+  operation = buildTTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp1j6ytonk
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp1j6ytonk: $
+    buildOTF instance_ufos/CommonSerif-BoldItalic.ufo.json
+  operation = buildOTF
+  args = --filter ...  --filter FlattenComponentsFilter --filter $
+      DecomposeTransformedComponentsFilter
+  fontmake_type = -u
+  fontmake_args =  --verbose WARNING 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpscecdho1
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpscecdho1: $
+    autohint /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp951h_dpb
+  operation = autohint
+  args = --fail-ok 
+# Generating ../fonts/ttf/CommonSerif-BoldItalic.ttf
+build ../fonts/ttf/CommonSerif-BoldItalic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpscecdho1
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpz8dqhdxs
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpz8dqhdxs: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp08iylkj6
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/ttf/CommonSerifSC-BoldItalic.ttf
+build ../fonts/ttf/CommonSerifSC-BoldItalic.ttf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpz8dqhdxs
+  operation = fix
+  args = 
+# Generating ../fonts/otf/CommonSerif-BoldItalic.otf
+build ../fonts/otf/CommonSerif-BoldItalic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmp1j6ytonk
+  operation = fix
+  args = 
+# Generating /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpyndcxhk7
+build /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpyndcxhk7: rename $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpuhgcxoyt
+  operation = rename
+  args = --just-family
+  name = Common Serif SC
+# Generating ../fonts/otf/CommonSerifSC-BoldItalic.otf
+build ../fonts/otf/CommonSerifSC-BoldItalic.otf: fix $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpyndcxhk7
+  operation = fix
+  args = 
+default ../fonts/webfonts/CommonSerif[wght].woff2 $
+    ../fonts/webfonts/CommonSerif-Italic[wght].woff2 $
+    ../fonts/webfonts/CommonSerif-Regular.woff2 $
+    ../fonts/webfonts/CommonSerif-News.woff2 $
+    ../fonts/webfonts/CommonSerif-Medium.woff2 $
+    ../fonts/webfonts/CommonSerif-SemiBold.woff2 $
+    ../fonts/webfonts/CommonSerif-Bold.woff2 $
+    ../fonts/webfonts/CommonSerif-Italic.woff2 $
+    ../fonts/webfonts/CommonSerif-NewsItalic.woff2 $
+    ../fonts/webfonts/CommonSerif-MediumItalic.woff2 $
+    ../fonts/webfonts/CommonSerif-SemiBoldItalic.woff2 $
+    ../fonts/webfonts/CommonSerif-BoldItalic.woff2 $
+    /var/folders/rg/9txh3wk556g9mx7wpz0z2dlc0000gn/T/tmpthwd4hpm.buildStatstamp $
+    ../fonts/variable/CommonSerifSC[wght].ttf $
+    ../fonts/ttf/CommonSerifSC-Regular.ttf $
+    ../fonts/otf/CommonSerifSC-Regular.otf $
+    ../fonts/ttf/CommonSerifSC-News.ttf ../fonts/otf/CommonSerifSC-News.otf $
+    ../fonts/ttf/CommonSerifSC-Medium.ttf $
+    ../fonts/otf/CommonSerifSC-Medium.otf $
+    ../fonts/ttf/CommonSerifSC-SemiBold.ttf $
+    ../fonts/otf/CommonSerifSC-SemiBold.otf $
+    ../fonts/ttf/CommonSerifSC-Bold.ttf ../fonts/otf/CommonSerifSC-Bold.otf $
+    ../fonts/ttf/CommonSerifSC-Italic.ttf $
+    ../fonts/otf/CommonSerifSC-Italic.otf $
+    ../fonts/ttf/CommonSerifSC-NewsItalic.ttf $
+    ../fonts/otf/CommonSerifSC-NewsItalic.otf $
+    ../fonts/ttf/CommonSerifSC-MediumItalic.ttf $
+    ../fonts/otf/CommonSerifSC-MediumItalic.otf $
+    ../fonts/ttf/CommonSerifSC-SemiBoldItalic.ttf $
+    ../fonts/otf/CommonSerifSC-SemiBoldItalic.otf $
+    ../fonts/ttf/CommonSerifSC-BoldItalic.ttf $
+    ../fonts/otf/CommonSerifSC-BoldItalic.otf
